@@ -1,0 +1,89 @@
+Day 1 – SDLC Recap & Conclusion
+Project: PetPal
+Date: 2026-05-23
+
+========================================
+1. REQUIREMENTS (SDLC: Requirements)
+========================================
+Functional:
+- User authentication (email/password)
+- User profile with multiple pets
+- Real-time one-to-one messaging
+- Friend system (send/accept/reject)
+- Pet matching (play date interest)
+
+Non-functional:
+- Cross-platform: Web, Android, iOS
+- Backend: Node.js + Express + PostgreSQL + Socket.io
+- Ubuntu development environment
+- No e-commerce, bookings, grooming, sitters, food, medicine
+
+Output file: docs/requirements.md
+
+========================================
+2. PLANNING & ENVIRONMENT SETUP
+========================================
+- Created folders: backend, webapp, android, ios, docs
+- Git initialized, .gitignore created
+- Installed Node.js v22, npm, PostgreSQL
+- Installed backend dependencies (express, cors, dotenv, bcrypt, jsonwebtoken, pg, socket.io, multer, nodemon)
+
+========================================
+3. DATABASE DESIGN
+========================================
+Tables created in PostgreSQL database "petpal":
+- users
+- pets
+- friendships
+- messages
+- pet_matches
+
+Schema file: backend/config/schema.sql
+
+========================================
+4. BACKEND SKELETON (Development)
+========================================
+File: backend/index.js
+- Express server on port 5000
+- GET / returns "PetPal API running"
+- Socket.io placeholder
+
+File: backend/.env with PORT=5000
+
+Tested: curl http://localhost:5000 -> "PetPal API running"
+
+========================================
+5. VERSION CONTROL & GITHUB
+========================================
+- Local commits done
+- GitHub repo created: https://github.com/Dansonjr/PetPal
+- Personal access token generated (repo scope)
+- Successfully pushed all files to main branch
+
+========================================
+6. DOCUMENTATION & PLACEHOLDERS
+========================================
+- README.md (project summary)
+- android/README.md placeholder
+- ios/README.md placeholder
+- docs/requirements.md (full requirements)
+
+========================================
+CONCLUSION
+========================================
+SDLC Phases completed today:
++ Requirements: Done
++ Planning & Environment: Done
++ Database Design (basic): Done
++ Backend Skeleton: Done
++ Version Control & GitHub: Done
++ Local Testing: Verified
+
+Day 1 Deliverables visible on GitHub:
+- Full project structure
+- Requirements document
+- PostgreSQL schema
+- Node.js backend skeleton
+- Android/iOS placeholders
+
+
