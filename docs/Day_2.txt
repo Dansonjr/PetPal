@@ -1,0 +1,72 @@
+Day 2 – Design Phase Recap
+Project: PetPal
+Date: 2026-05-25
+
+========================================
+1. DATABASE RELATIONSHIPS
+========================================
+File: docs/database_design.md
+- Defined ER diagram as text
+- Relationships: users ↔ pets (one-to-many)
+- users ↔ friendships (many-to-many self)
+- messages (sender/receiver)
+- pet_matches (requester/target)
+- Indexes identified for performance
+
+========================================
+2. API CONTRACT (OpenAPI)
+========================================
+File: docs/api/openapi.yaml
+- Swagger 3.0 specification
+- Endpoints documented:
+  * Authentication (register, login)
+  * Users (profile, search)
+  * Friends (requests, accept/reject, list)
+  * Messages (conversation, send)
+  * Pets (add pet, match request, incoming matches)
+- Components: security (bearerAuth), schemas (User, Pet, UserWithPets)
+
+========================================
+3. UI COMPONENT STRUCTURES
+========================================
+Web (React): webapp/src/components/structure.txt
+- auth, profile, friends, chat, pets, layout, common
+
+Android (Kotlin): android/structure.txt
+- activities, fragments, view models, network, utils
+
+iOS (SwiftUI): ios/structure.txt
+- views, view models, models, services, utils
+
+========================================
+4. BACKEND ENHANCEMENT (User Model + JWT)
+========================================
+Installed: jsonwebtoken, bcrypt
+
+Files created:
+- backend/config/db.js (PostgreSQL connection pool)
+- backend/models/User.js
+  * create() – hash password, insert user, return user data
+  * findByEmail() – retrieve user by email
+  * findById() – retrieve user with pets (JSON aggregation)
+  * generateToken() – JWT creation (expires 7d)
+  * verifyToken() – token validation
+
+Updated .env: added JWT_SECRET (random base64 string)
+
+========================================
+5. GITHUB COMMIT
+========================================
+Commit message: "Day 2: Database design, API spec, UI structures, user model"
+All changes pushed to main branch.
+
+========================================
+CONCLUSION
+========================================
+Day 2 deliverables complete:
++ Database design document
++ Complete OpenAPI specification
++ UI component skeletons for all platforms
++ Backend user model with JWT authentication
+
+Ready for Day 3 – Architecture (real-time messaging with Socket.io)
