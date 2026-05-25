@@ -1,0 +1,73 @@
+Day 3 – Architecture Phase Recap
+Project: PetPal
+Date: 2026-05-25
+
+========================================
+1. AUTHENTICATION MIDDLEWARE
+========================================
+File: backend/middleware/auth.js
+- Verifies JWT from Authorization: Bearer <token>
+- Attaches req.userId and req.userEmail
+- Returns 401 if token missing/invalid
+
+========================================
+2. SOCKET.IO WITH AUTHENTICATION
+========================================
+Updated backend/index.js:
+- Socket.io uses handshake.auth.token for user verification
+- Each user joins private room: user_<userId>
+- Listens for 'private message' events and forwards to receiver's room
+- Real-time messaging foundation ready
+
+========================================
+3. API ROUTES IMPLEMENTED
+========================================
+routes/auth.js:
+- POST /api/auth/register → creates user, returns JWT
+- POST /api/auth/login → verifies credentials, returns JWT
+
+routes/users.js:
+- GET /api/users/me (protected) → returns user profile with pets
+- GET /api/users/search?q= (protected) → search users by name
+
+Testing:
+- Registration: curl POST /api/auth/register → returns token + user
+- Login: curl POST /api/auth/login → returns token + user
+- Protected route: GET /api/users/me with Bearer token → user profile
+
+========================================
+4. DATABASE CONNECTION FIX
+========================================
+Issue: password authentication failed for 'postgres'
+Fix: Set password for postgres user and update .env
+Final DB_URL: postgresql://postgres:postgres@localhost:5432/petpal
+Tested: node database connection script → OK
+
+========================================
+5. PORT CONFLICT RESOLUTION
+========================================
+Issue: EADDRINUSE - port 5000 already in use
+Fix: fuser -k 5000/tcp to kill existing process
+
+========================================
+6. DATA FLOW DOCUMENTATION
+========================================
+File: docs/architecture.md
+- Backend components (Express, PostgreSQL, Socket.io)
+- JWT authentication flow
+- Real-time messaging flow (private rooms)
+- Client-server communication strategy (REST + WebSockets)
+
+========================================
+CONCLUSION
+========================================
+Day 3 deliverables complete:
++ Authentication middleware
++ Socket.io with JWT auth
++ User registration/login endpoints
++ Protected profile endpoint
++ Database connection fixed
++ Port conflict resolved
++ Architecture documentation
+
+Ready for Day 4 – Friends System (send/accept/reject friend requests)
