@@ -1,0 +1,28 @@
+webapp/src/components/
+├── auth/
+│   ├── Login.jsx
+│   └── Register.jsx
+├── profile/
+│   ├── UserProfile.jsx
+│   ├── EditProfile.jsx
+│   ├── PetCard.jsx
+│   └── AddPetForm.jsx
+├── friends/
+│   ├── FriendList.jsx
+│   ├── FriendRequests.jsx
+│   └── SearchUsers.jsx
+├── chat/
+│   ├── ChatList.jsx
+│   ├── ChatWindow.jsx
+│   └── MessageBubble.jsx
+├── pets/
+│   ├── PetMatcher.jsx
+│   ├── MatchRequestCard.jsx
+│   └── IncomingMatches.jsx
+├── layout/
+│   ├── Navbar.jsx
+│   └── Sidebar.jsx
+└── common/
+    ├── LoadingSpinner.jsx
+    ├── ErrorAlert.jsx
+    └── PrivateRoute.jsx

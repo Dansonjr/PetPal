@@ -1,0 +1,229 @@
+openapi: 3.0.0
+info:
+  title: PetPal API
+  version: 1.0.0
+  description: Social platform for pet owners
+servers:
+  - url: http://localhost:5000/api
+    description: Local development
+paths:
+  /auth/register:
+    post:
+      summary: Register new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password, name]
+              properties:
+                email: { type: string, format: email }
+                password: { type: string, minLength: 6 }
+                name: { type: string }
+      responses:
+        '201':
+          description: User created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token: { type: string }
+                  user: { $ref: '#/components/schemas/User' }
+  /auth/login:
+    post:
+      summary: Login user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string }
+                password: { type: string }
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token: { type: string }
+                  user: { $ref: '#/components/schemas/User' }
+  /users/me:
+    get:
+      summary: Get current user profile with pets
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: User profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserWithPets'
+  /users/search:
+    get:
+      summary: Search users by name
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: q
+          in: query
+          schema: { type: string }
+      responses:
+        '200':
+          description: List of users
+  /friends/requests:
+    post:
+      summary: Send friend request
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [userId]
+              properties:
+                userId: { type: integer }
+      responses:
+        '201': { description: Request sent }
+    get:
+      summary: Get pending friend requests
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: List of pending requests
+  /friends/requests/{requestId}:
+    put:
+      summary: Accept or reject friend request
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: requestId
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [action]
+              properties:
+                action: { type: string, enum: [accept, reject] }
+      responses:
+        '200': { description: Request updated }
+  /friends:
+    get:
+      summary: Get friends list
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: List of friends (accepted)
+  /messages/{userId}:
+    get:
+      summary: Get conversation with specific user
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: List of messages
+    post:
+      summary: Send a message
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [content]
+              properties:
+                content: { type: string }
+      responses:
+        '201': { description: Message sent }
+  /pets:
+    post:
+      summary: Add a pet to user profile
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name: { type: string }
+                species: { type: string }
+                breed: { type: string }
+                age: { type: integer }
+      responses:
+        '201': { description: Pet added }
+  /pets/match:
+    post:
+      summary: Send a pet match (play date request)
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [targetPetId]
+              properties:
+                targetPetId: { type: integer }
+      responses:
+        '201': { description: Match request sent }
+  /pets/match/incoming:
+    get:
+      summary: Get incoming match requests
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: List of match requests
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  schemas:
+    User:
+      type: object
+      properties:
+        id: { type: integer }
+        email: { type: string }
+        name: { type: string }
+        location: { type: string }
+        bio: { type: string }
+        profile_photo_url: { type: string }
+        created_at: { type: string, format: date-time }
+    Pet:
+      type: object
+      properties:
+        id: { type: integer }
+        user_id: { type: integer }
+        name: { type: string }
+        species: { type: string }
+        breed: { type: string }
+        age: { type: integer }
+        photo_url: { type: string }
+    UserWithPets:
+      allOf:
+        - $ref: '#/components/schemas/User'
+        - type: object
+          properties:
+            pets: { type: array, items: { $ref: '#/components/schemas/Pet' } }

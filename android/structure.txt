@@ -1,0 +1,33 @@
+android/app/src/main/java/com/petpal/
+├── MainActivity.kt
+├── auth/
+│   ├── LoginActivity.kt
+│   ├── RegisterActivity.kt
+│   └── AuthViewModel.kt
+├── profile/
+│   ├── ProfileFragment.kt
+│   ├── EditProfileActivity.kt
+│   ├── AddPetActivity.kt
+│   └── ProfileViewModel.kt
+├── friends/
+│   ├── FriendsFragment.kt
+│   ├── FriendRequestsFragment.kt
+│   ├── SearchUsersFragment.kt
+│   └── FriendsViewModel.kt
+├── chat/
+│   ├── ChatActivity.kt
+│   ├── ChatAdapter.kt
+│   ├── MessageBubble.kt
+│   └── ChatViewModel.kt
+├── pets/
+│   ├── PetMatcherFragment.kt
+│   ├── MatchRequestAdapter.kt
+│   └── PetMatcherViewModel.kt
+├── network/
+│   ├── ApiService.kt
+│   ├── RetrofitClient.kt
+│   ├── SocketManager.kt
+│   └── models/ (User, Pet, Message, etc.)
+└── utils/
+    ├── SharedPrefs.kt
+    └── DateFormatter.kt
