@@ -1,0 +1,41 @@
+Day 4 – Friends System (Backend)
+Project: PetPal
+Date: 2026-05-25
+
+========================================
+1. FRIEND MODEL
+========================================
+File: backend/models/Friend.js
+- sendRequest(requesterId, addresseeId)
+- getPendingRequests(userId)
+- acceptRequest(requestId, userId)
+- rejectRequest(requestId, userId)
+- getFriends(userId)
+
+========================================
+2. FRIEND ROUTES
+========================================
+File: backend/routes/friends.js
+- POST /api/friends/requests
+- GET /api/friends/requests
+- PUT /api/friends/requests/:id
+- GET /api/friends
+
+========================================
+3. SOCKET.IO INTEGRATION
+========================================
+- Real-time notifications for friend requests and acceptances
+- Private rooms per user
+
+========================================
+4. TESTING RESULTS
+========================================
+- Alice sent friend request to Bob
+- Bob accepted request
+- Alice's friends list shows Bob
+- Duplicate request prevention works
+
+========================================
+CONCLUSION
+========================================
+Day 4 complete: Friends system fully functional.
