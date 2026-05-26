@@ -15,12 +15,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/users', require('./routes/users'));
 
-// Friend routes (with Socket.io integration)
 const friendRoutes = require('./routes/friends');
 friendRoutes.setIo(io);
 app.use('/api/friends', friendRoutes.router);
 
-// Test route
+app.use('/api/pets', require('./routes/pets'));
+app.use('/api/pet-matches', require('./routes/petmatches'));
+
 app.get('/', (req, res) => res.send('PetPal API running'));
 
 // Socket.io authentication
