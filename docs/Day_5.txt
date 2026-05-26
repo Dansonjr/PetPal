@@ -1,1 +1,54 @@
-[Day 5 content as provided earlier]
+Day 5 – Pet Management & Pet Matching
+Project: PetPal
+Date: 2026-05-26
+
+========================================
+1. PET MODEL (CRUD)
+========================================
+File: backend/models/Pet.js
+- create(userId, petData)
+- getByUser(userId)
+- getById(petId)
+- update(petId, updates)
+- delete(petId)
+- findNearby(userId)
+
+========================================
+2. PET ROUTES
+========================================
+File: backend/routes/pets.js
+- POST /api/pets (add pet)
+- GET /api/pets (list user's pets)
+- PUT /api/pets/:id (update, owner only)
+- DELETE /api/pets/:id (delete, owner only)
+- GET /api/pets/nearby (potential matches)
+
+========================================
+3. PET MATCH MODEL
+========================================
+File: backend/models/PetMatch.js
+- create(requesterPetId, targetPetId)
+- getIncoming(userId)
+- updateStatus(matchId, userId, action)
+
+========================================
+4. PET MATCH ROUTES
+========================================
+File: backend/routes/petmatches.js
+- POST /api/pet-matches (send request)
+- GET /api/pet-matches/incoming (incoming requests)
+- PUT /api/pet-matches/:id (accept/reject)
+
+========================================
+5. TESTING RESULTS
+========================================
+- Alice added pet "Fluffy" (cat)
+- Bob added pet "Rex" (dog)
+- Alice sent match request to Bob's pet
+- Bob accepted request
+- All endpoints functional with error handling
+
+========================================
+CONCLUSION
+========================================
+Day 5 complete: Pet CRUD and pet matching system fully functional.
