@@ -1,0 +1,154 @@
+Day 7 – Frontend Setup (React Web App)
+Project: PetPal
+Date: 2026-05-28
+
+========================================
+1. REACT APP CREATION
+========================================
+- Used Vite (faster than Create React App)
+- Commands:
+  npm create vite@latest webapp -- --template react
+  cd webapp
+  npm install
+  npm install axios socket.io-client react-router-dom
+
+========================================
+2. FOLDER STRUCTURE
+========================================
+src/
+├── components/
+│   ├── auth/
+│   ├── profile/
+│   ├── friends/
+│   ├── chat/
+│   ├── pets/
+│   └── common/
+├── pages/
+│   ├── Login.jsx
+│   ├── Register.jsx
+│   └── Dashboard.jsx
+├── contexts/
+│   └── AuthContext.jsx
+├── services/
+│   ├── api.js
+│   └── socket.js
+├── utils/
+├── App.jsx
+├── main.jsx
+└── index.css
+
+========================================
+3. AUTHENTICATION CONTEXT
+========================================
+File: src/contexts/AuthContext.jsx
+Features:
+- Manages user state and JWT token
+- Persists token in localStorage
+- Provides login(), register(), logout() functions
+- Automatically fetches user profile on app load
+- Loading state while fetching user
+
+========================================
+4. API SERVICE
+========================================
+File: src/services/api.js
+- Axios instance with base URL (http://localhost:5000/api)
+- Request interceptor adds Bearer token to all requests
+- Environment variable: VITE_API_URL
+
+========================================
+5. SOCKET SERVICE (placeholder)
+========================================
+File: src/services/socket.js
+- connectSocket(token) - establishes Socket.io connection
+- getSocket() - returns current socket instance
+- disconnectSocket() - closes connection
+- Ready for real-time features (Day 10)
+
+========================================
+6. ROUTING CONFIGURATION
+========================================
+Routes defined in App.jsx:
+- /login - Login page (public)
+- /register - Register page (public)
+- /dashboard - Dashboard (protected)
+- / - Redirects to /dashboard
+
+PrivateRoute component checks authentication before rendering protected routes
+
+========================================
+7. STYLING (index.css)
+========================================
+Includes:
+- Gradient background (purple to blue)
+- Card components with shadows and hover effects
+- Form styling with focus states
+- Button styles (primary, danger, success)
+- Navbar with flex layout
+- Grid system for responsive layouts
+- Alert messages (error/success)
+- Loading spinner animation
+- Pet card component styling
+- Responsive auth container
+
+========================================
+8. PAGES CREATED
+========================================
+Login.jsx:
+- Email/password form
+- Error handling
+- Link to register page
+- Uses useAuth() hook
+
+Register.jsx:
+- Name, email, password form
+- Error handling
+- Link to login page
+- Uses useAuth() hook
+
+Dashboard.jsx:
+- Navbar with user name and logout button
+- Welcome message with user info
+- Feature cards grid (preview of upcoming features)
+- Member since date display
+
+========================================
+9. ENVIRONMENT CONFIGURATION
+========================================
+File: .env
+VITE_API_URL=http://localhost:5000/api
+
+========================================
+10. TESTING RESULTS
+========================================
+- Backend running on port 5000
+- React app running on port 5173
+- User registration working via API
+- User login working via API
+- Token stored in localStorage
+- Protected routes redirect unauthenticated users
+- Dashboard displays user info
+- Logout clears token and redirects to login
+
+========================================
+11. GITHUB COMMIT
+========================================
+Files added:
+- webapp/ (entire React application)
+- docs/Day_7.txt
+
+Commit message: "Day 7: React web app setup with auth, routing, API integration, and base styling"
+
+========================================
+CONCLUSION
+========================================
+Day 7 deliverables complete:
++ React app with Vite
++ Authentication context (login/register/logout)
++ Protected routes
++ API integration with axios
++ Socket.io service (placeholder)
++ Base CSS styling
++ Working registration and login flow
+
+Ready for Day 8 – Profile & Pet Management UI
