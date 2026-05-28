@@ -1,0 +1,53 @@
+Day 6 – Real-Time Messaging Enhancements
+Project: PetPal
+Date: 2026-05-28
+
+========================================
+1. MESSAGE MODEL
+========================================
+File: backend/models/Message.js
+- create({ senderId, receiverId, content }) – saves message to DB
+- getConversation(userId1, userId2, limit, offset) – chat history
+- markAsRead(receiverId, senderId) – update is_read flag
+- getUnreadCount(userId) – count unread messages
+
+========================================
+2. SOCKET.IO INTEGRATION
+========================================
+Updated backend/index.js:
+- 'private message' event now saves to database before emitting
+- 'mark read' event updates is_read flag
+- 'messages read' event notifies sender
+
+========================================
+3. MESSAGE ROUTES (REST API)
+========================================
+File: backend/routes/messages.js
+- GET /api/messages/:userId (get conversation, paginated)
+- PUT /api/messages/read/:senderId (mark as read)
+- GET /api/messages/unread/count (unread count)
+
+========================================
+4. DATABASE SCHEMA UPDATE
+========================================
+- Verified messages table has is_read column
+- Added if missing: ALTER TABLE messages ADD COLUMN is_read BOOLEAN DEFAULT FALSE
+
+========================================
+5. TESTING RESULTS
+========================================
+- Alice sent message to Bob via Socket.io
+- Message persisted to PostgreSQL (id: 1)
+- Bob received message in real-time
+- Bob marked as read via Socket.io
+- Alice received read receipt
+- REST API conversation history shows message
+- Unread count correctly returns 0
+
+All tests passed successfully.
+
+========================================
+CONCLUSION
+========================================
+Day 6 complete: Full message persistence, chat history, read receipts.
+Ready for Day 7 – Frontend Setup (React Web App)
