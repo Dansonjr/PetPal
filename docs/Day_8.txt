@@ -1,0 +1,63 @@
+Day 8 – Profile & Pet Management UI
+Project: PetPal
+Date: 2026-05-31
+
+========================================
+1. PROFILE EDIT PAGE
+========================================
+File: pages/profile/ProfileEdit.jsx
+- Edit name, bio, location
+- Form validation
+- Success/error messages
+- Auto-fills with current user data
+
+========================================
+2. PET MANAGEMENT
+========================================
+Components:
+- PetCard.jsx – displays pet info with edit/delete buttons
+- PetForm.jsx – add/edit pet form (name, species, breed, age, photo_url)
+- PetManagement.jsx – main pet management page with grid layout
+
+Features:
+- Add new pet
+- Edit existing pet
+- Delete pet (with confirmation)
+- Grid display of all user's pets
+- Loading states
+
+========================================
+3. DASHBOARD WITH TABS
+========================================
+Updated Dashboard.jsx:
+- Tab navigation: Profile, My Pets, Friends (placeholder), Pet Matches (placeholder)
+- Active tab highlighting
+- Dynamic component rendering
+
+========================================
+4. BACKEND ENDPOINT ADDED
+========================================
+PUT /api/users/profile – update user profile
+- Updates name, bio, location
+- Returns updated user object
+- Protected by auth middleware
+
+========================================
+5. AUTH CONTEXT UPDATE
+========================================
+Added setUser function to allow profile updates to reflect immediately in UI
+
+========================================
+6. TESTING RESULTS
+========================================
+- Profile edit working
+- Pet add/edit/delete working
+- UI updates immediately after changes
+- Form validation prevents empty pet names
+- Delete confirmation prevents accidental deletion
+
+========================================
+CONCLUSION
+========================================
+Day 8 complete: Profile and pet management UI fully functional.
+Ready for Day 9 – Friends UI (list friends, send/accept requests)
