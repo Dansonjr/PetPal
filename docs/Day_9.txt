@@ -1,0 +1,57 @@
+Day 9 – Friends UI (React Components)
+Project: PetPal
+Date: 2026-05-31
+
+========================================
+1. FRIEND COMPONENTS
+========================================
+Created:
+- FriendCard.jsx – displays friend with message button
+- FriendRequestCard.jsx – incoming requests with accept/reject
+- SearchUsers.jsx – search and add friends
+
+========================================
+2. FRIENDS PAGE
+========================================
+File: pages/Friends.jsx
+Features:
+- Tab navigation: Friends, Requests, Find Friends
+- Real-time friend count badges
+- Accept/reject friend requests
+- Search for users by name
+- Send friend requests
+- Automatic refresh after actions
+
+========================================
+3. DASHBOARD INTEGRATION
+========================================
+Updated Dashboard.jsx:
+- Added Friends tab
+- Tab order: Profile, My Pets, Friends, Pet Matches
+
+========================================
+4. API INTEGRATION
+========================================
+Endpoints used:
+- GET /api/friends – fetch friends list
+- GET /api/friends/requests – fetch pending requests
+- POST /api/friends/requests – send request
+- PUT /api/friends/requests/:id – accept/reject
+- GET /api/users/search?q= – search users
+
+========================================
+5. TESTING RESULTS
+========================================
+- Alice can search and find Bob
+- Friend request sent successfully
+- Bob receives and sees pending request
+- Bob can accept request
+- Both see each other in friends list
+- Reject also works
+- Duplicate request prevention works
+
+========================================
+CONCLUSION
+========================================
+Day 9 complete: Friends UI fully functional.
+Ready for Day 10 – Real-time Chat UI

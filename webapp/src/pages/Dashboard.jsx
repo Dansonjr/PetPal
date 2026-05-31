@@ -3,6 +3,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { Link } from 'react-router-dom';
 import ProfileEdit from './profile/ProfileEdit';
 import PetManagement from './profile/PetManagement';
+import Friends from './Friends';
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
@@ -11,7 +12,7 @@ const Dashboard = () => {
   const tabs = [
     { id: 'profile', name: '📝 Profile', component: ProfileEdit },
     { id: 'pets', name: '🐾 My Pets', component: PetManagement },
-    { id: 'friends', name: '👥 Friends', component: () => <div className="card"><h3>Friends Feature Coming Soon</h3><p>Day 9 will add friend management UI.</p></div> },
+    { id: 'friends', name: '👥 Friends', component: Friends },
     { id: 'matches', name: '🐶 Pet Matches', component: () => <div className="card"><h3>Pet Matching Coming Soon</h3><p>Day 11 will add pet matching UI.</p></div> },
   ];
 
@@ -34,7 +35,7 @@ const Dashboard = () => {
       </nav>
 
       <div className="container">
-        <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', borderBottom: '2px solid #e0e0e0' }}>
+        <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', borderBottom: '2px solid #e0e0e0', flexWrap: 'wrap' }}>
           {tabs.map(tab => (
             <button
               key={tab.id}
