@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import ProfileEdit from './profile/ProfileEdit';
 import PetManagement from './profile/PetManagement';
 import Friends from './Friends';
+import Chat from './Chat';
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
@@ -13,6 +14,7 @@ const Dashboard = () => {
     { id: 'profile', name: '📝 Profile', component: ProfileEdit },
     { id: 'pets', name: '🐾 My Pets', component: PetManagement },
     { id: 'friends', name: '👥 Friends', component: Friends },
+    { id: 'chat', name: '💬 Chat', component: Chat },
     { id: 'matches', name: '🐶 Pet Matches', component: () => <div className="card"><h3>Pet Matching Coming Soon</h3><p>Day 11 will add pet matching UI.</p></div> },
   ];
 

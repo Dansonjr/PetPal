@@ -2,11 +2,27 @@ const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
 const jwt = require('jsonwebtoken');
+const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server, { cors: { origin: "*" } });
+
+// Configure CORS properly
+app.use(cors({
+  origin: ['http://localhost:5173', 'http://localhost:3000', 'http://127.0.0.1:5173'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+const io = socketIo(server, { 
+  cors: { 
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST"],
+    credentials: true
+  } 
+});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -21,8 +37,6 @@ app.use('/api/friends', friendRoutes.router);
 
 app.use('/api/pets', require('./routes/pets'));
 app.use('/api/pet-matches', require('./routes/petmatches'));
-
-// Message routes (will add in step 4)
 app.use('/api/messages', require('./routes/messages'));
 
 app.get('/', (req, res) => res.send('PetPal API running'));
@@ -40,24 +54,20 @@ io.use((socket, next) => {
   }
 });
 
-// Import Message model for database saving
 const Message = require('./models/Message');
 
 io.on('connection', (socket) => {
   console.log(`User ${socket.userId} connected`);
   socket.join(`user_${socket.userId}`);
 
-  // Handle sending a private message (NOW WITH DATABASE SAVE)
   socket.on('private message', async ({ receiverId, content }, callback) => {
     try {
-      // Save to database
       const savedMessage = await Message.create({
         senderId: socket.userId,
         receiverId: receiverId,
         content: content
       });
       
-      // Emit to receiver's room
       io.to(`user_${receiverId}`).emit('private message', {
         id: savedMessage.id,
         senderId: socket.userId,
@@ -67,7 +77,6 @@ io.on('connection', (socket) => {
         created_at: savedMessage.created_at
       });
       
-      // Send acknowledgment to sender
       if (callback) callback({ success: true, messageId: savedMessage.id });
     } catch (err) {
       console.error('Error saving message:', err);
@@ -75,11 +84,16 @@ io.on('connection', (socket) => {
     }
   });
 
-  // Handle mark as read
+  socket.on('typing', ({ receiverId, isTyping }) => {
+    socket.to(`user_${receiverId}`).emit('user typing', {
+      userId: socket.userId,
+      isTyping
+    });
+  });
+
   socket.on('mark read', async ({ senderId }) => {
     try {
       await Message.markAsRead(socket.userId, senderId);
-      // Notify sender that messages were read
       io.to(`user_${senderId}`).emit('messages read', {
         byUserId: socket.userId
       });
