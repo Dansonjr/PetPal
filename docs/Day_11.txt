@@ -1,0 +1,107 @@
+Day 11 – Pet Matching UI
+Project: PetPal
+Date: 2026-06-02
+
+========================================
+1. PET MATCHING COMPONENTS
+========================================
+Files created:
+- components/pet-matching/MatchPetCard.jsx
+  * Displays other users' pets
+  * Send play date request button
+  * Prevents duplicate requests
+  * Handles loading states
+
+- components/pet-matching/MatchRequestCard.jsx
+  * Displays incoming match requests
+  * Accept/Decline buttons
+  * Request status updates
+
+========================================
+2. PET MATCHING PAGE
+========================================
+File: pages/PetMatching.jsx
+Features:
+- Tab navigation: Browse Pets, Incoming Requests
+- Fetches nearby pets from backend API
+- Displays pets in responsive grid layout
+- Shows request counts on tabs
+- Validates user has at least one pet
+- Redirects to add pet page if no pets
+
+========================================
+3. DASHBOARD INTEGRATION
+========================================
+Updated Dashboard.jsx:
+- Added Pet Matches tab with 🐶 icon
+- Tab order: Profile, My Pets, Friends, Chat, Pet Matches
+- URL query parameter support for tab navigation
+
+========================================
+4. BACKEND API INTEGRATION
+========================================
+Endpoints used:
+- GET /api/pets/nearby – fetch other users' pets
+- POST /api/pet-matches – send match request
+- GET /api/pet-matches/incoming – fetch incoming requests
+- PUT /api/pet-matches/:id – accept/reject request
+
+========================================
+5. USER FLOW
+========================================
+1. User adds a pet (My Pets tab)
+2. User navigates to Pet Matches tab
+3. System checks if user has a pet
+4. Displays nearby pets from other users
+5. User clicks "Request Play Date"
+6. Request saved to database with 'pending' status
+7. Target pet owner receives request
+8. Owner can accept or decline
+9. Status updates in real-time
+
+========================================
+6. TESTING RESULTS
+========================================
+- Alice added pet "Fluffy"
+- Bob added pet "Rex"
+- Alice browsed nearby pets and saw Rex
+- Alice sent play date request
+- Bob received incoming request notification
+- Bob accepted request
+- Request status updated successfully
+
+========================================
+7. ERROR HANDLING
+========================================
+- No pet added → shows helpful message with link to add pet
+- Duplicate request → shows error alert
+- Network errors → user-friendly error messages
+- Loading states during API calls
+
+========================================
+8. FILES CREATED/MODIFIED
+========================================
+New files:
+- webapp/src/components/pet-matching/MatchPetCard.jsx
+- webapp/src/components/pet-matching/MatchRequestCard.jsx
+- webapp/src/pages/PetMatching.jsx
+
+Modified files:
+- webapp/src/pages/Dashboard.jsx
+
+Documentation:
+- docs/Day_11.txt
+
+========================================
+CONCLUSION
+========================================
+Day 11 complete: Pet matching UI fully functional.
+Features working:
++ Browse nearby pets from other users
++ Send play date requests
++ View incoming requests
++ Accept/decline match requests
++ Duplicate request prevention
++ User-friendly error handling
+
+Ready for Day 12 – Responsive Design & Polish (mobile responsiveness, dark mode)

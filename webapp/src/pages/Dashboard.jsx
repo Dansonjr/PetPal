@@ -1,21 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import ProfileEdit from './profile/ProfileEdit';
 import PetManagement from './profile/PetManagement';
 import Friends from './Friends';
 import Chat from './Chat';
+import PetMatching from './PetMatching';
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState('profile');
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const tab = params.get('tab');
+    if (tab) setActiveTab(tab);
+  }, [location]);
 
   const tabs = [
     { id: 'profile', name: '📝 Profile', component: ProfileEdit },
     { id: 'pets', name: '🐾 My Pets', component: PetManagement },
     { id: 'friends', name: '👥 Friends', component: Friends },
     { id: 'chat', name: '💬 Chat', component: Chat },
-    { id: 'matches', name: '🐶 Pet Matches', component: () => <div className="card"><h3>Pet Matching Coming Soon</h3><p>Day 11 will add pet matching UI.</p></div> },
+    { id: 'matches', name: '🐶 Pet Matches', component: PetMatching },
   ];
 
   const ActiveComponent = tabs.find(t => t.id === activeTab)?.component || ProfileEdit;
