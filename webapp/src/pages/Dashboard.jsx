@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useTheme } from '../contexts/ThemeContext';
 import { Link, useLocation } from 'react-router-dom';
 import ProfileEdit from './profile/ProfileEdit';
 import PetManagement from './profile/PetManagement';
@@ -9,6 +10,7 @@ import PetMatching from './PetMatching';
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
+  const { darkMode, toggleDarkMode } = useTheme();
   const location = useLocation();
   const [activeTab, setActiveTab] = useState('profile');
 
@@ -36,6 +38,9 @@ const Dashboard = () => {
             🐾 PetPal
           </Link>
           <div className="navbar-menu">
+            <button onClick={toggleDarkMode} className="btn" style={{ background: 'transparent', fontSize: '20px' }}>
+              {darkMode ? '☀️' : '🌙'}
+            </button>
             <span style={{ color: '#666' }}>Welcome, {user?.name}!</span>
             <button onClick={logout} className="btn btn-danger">
               Logout
@@ -45,7 +50,7 @@ const Dashboard = () => {
       </nav>
 
       <div className="container">
-        <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', borderBottom: '2px solid #e0e0e0', flexWrap: 'wrap' }}>
+        <div className="tab-buttons" style={{ display: 'flex', gap: '10px', marginBottom: '20px', borderBottom: '2px solid #e0e0e0', flexWrap: 'wrap' }}>
           {tabs.map(tab => (
             <button
               key={tab.id}

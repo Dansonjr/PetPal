@@ -1,0 +1,101 @@
+Day 12 – Responsive Design & Polish
+Project: PetPal
+Date: 2026-06-04
+
+========================================
+1. MOBILE RESPONSIVENESS
+========================================
+- Added media queries for tablet (768px+) and mobile (max 767px)
+- Responsive grid layout (1 column mobile, multiple columns desktop)
+- Chat layout adapts to mobile (stacked instead of side-by-side)
+- Navbar becomes column on mobile
+- Auth container responsive width
+- Improved touch targets for mobile
+
+========================================
+2. DARK MODE
+========================================
+Created ThemeContext.jsx:
+- Toggle between light/dark themes
+- Persists preference in localStorage
+- Dark mode colors: #1a1a2e background, #16213e cards
+- Smooth transitions between themes
+- Moon/sun icon in navbar
+
+========================================
+3. LOADING SKELETONS
+========================================
+Created LoadingSkeleton.jsx:
+- Card skeleton for pet displays
+- Chat message skeletons
+- Animated shimmer effect
+- Reusable across components
+
+========================================
+4. TOAST NOTIFICATIONS
+========================================
+Created Toast.jsx:
+- Auto-dismiss notifications
+- Success, error, info types
+- Slide-in animation
+- useToast custom hook
+
+========================================
+5. FORM VALIDATION
+========================================
+Created useFormValidation.js:
+- Reusable validation hook
+- Real-time error display
+- Touch tracking for UX
+- Prevents form submission with errors
+
+========================================
+6. ANIMATIONS
+========================================
+- Fade-in animation for cards
+- Loading skeleton pulse animation
+- Toast slide-in animation
+- Spinner rotation animation
+- Hover transitions on buttons
+
+========================================
+7. ACCESSIBILITY IMPROVEMENTS
+========================================
+- Proper contrast ratios in dark/light modes
+- Focus indicators on interactive elements
+- Semantic HTML structure
+- ARIA labels added to icons
+
+========================================
+8. FILES CREATED/MODIFIED
+========================================
+New files:
+- contexts/ThemeContext.jsx
+- components/common/LoadingSkeleton.jsx
+- components/common/Toast.jsx
+- hooks/useFormValidation.js
+
+Modified files:
+- src/index.css (responsive + dark mode)
+- src/App.jsx (ThemeProvider)
+- src/pages/Dashboard.jsx (dark mode toggle)
+- src/pages/Login.jsx (validation)
+- src/pages/Register.jsx (validation)
+
+Documentation:
+- docs/Day_12.txt
+
+========================================
+CONCLUSION
+========================================
+Day 12 complete: Responsive design and polish.
+Features added:
++ Mobile responsive layout
++ Dark mode toggle
++ Loading skeletons
++ Toast notifications
++ Form validation hook
++ Animations throughout
++ Accessibility improvements
+
+Ready for Day 13 – Android App (Kotlin) Setup
