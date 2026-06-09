@@ -1,0 +1,58 @@
+Day 14 – Progressive Web App (PWA) Setup
+Project: PetPal
+Date: 2026-06-09
+
+========================================
+1. PWA MANIFEST
+========================================
+Created webapp/public/manifest.json with:
+- App name and description
+- Theme colors (#667eea)
+- Icons for all screen sizes (96x96 to 512x512)
+- Display mode: standalone
+
+========================================
+2. SERVICE WORKER
+========================================
+Created webapp/src/sw.js with:
+- Asset caching for offline support
+- Fetch handler for network fallback
+- Cache cleanup on new versions
+
+========================================
+3. VITE CONFIGURATION
+========================================
+Updated vite.config.js:
+- Proxy setup for API (/api) and WebSocket (/socket.io)
+- Build optimization
+- Development server on port 5173
+
+========================================
+4. ICONS GENERATED
+========================================
+Created SVG icons:
+- favicon.svg
+- icon-96x96.svg
+- icon-144x144.svg
+- icon-192x192.svg
+- icon-512x512.svg
+
+========================================
+5. HTML UPDATES
+========================================
+Added to index.html:
+- Manifest link
+- Theme color meta tag
+- Apple touch icon
+- Service worker registration script
+
+========================================
+6. TESTING PWA
+========================================
+- Chrome DevTools → Application tab
+- Manifest loaded successfully
+- Service worker registered
+- Install prompt available
+
+========================================
+RESULT: Web app is now installable on mobile devices
