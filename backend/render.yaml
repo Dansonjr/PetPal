@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: petpal-backend
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node index.js
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DB_URL
+        fromDatabase:
+          name: petpal-db
+          property: connectionString
+
+databases:
+  - name: petpal-db
+    plan: free
