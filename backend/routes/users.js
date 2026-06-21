@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
 const User = require('../models/User');
-const db = require('../config/db');
 
 // Get current user profile
 router.get('/me', auth, async (req, res) => {

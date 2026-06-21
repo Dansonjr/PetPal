@@ -41,84 +41,39 @@ class User {
       return null;
     }
   }
+
+  // Update user location
+  static async updateLocation(userId, latitude, longitude) {
+    const result = await db.query(
+      `UPDATE users 
+       SET latitude = $1, longitude = $2, location_updated_at = NOW()
+       WHERE id = $3
+       RETURNING id, name, latitude, longitude`,
+      [latitude, longitude, userId]
+    );
+    return result.rows[0];
+  }
+
+  // Get nearby users
+  static async getNearbyUsers(userId, maxDistance = 50, limit = 20) {
+    const user = await this.findById(userId);
+    if (!user || !user.latitude || !user.longitude) {
+      throw new Error('User location not set');
+    }
+    
+    const result = await db.query(
+      `SELECT id, name, email, latitude, longitude,
+              (6371 * acos(cos(radians($1)) * cos(radians(latitude)) * 
+              cos(radians(longitude) - radians($2)) + sin(radians($1)) * 
+              sin(radians(latitude)))) AS distance
+       FROM users
+       WHERE id != $3 AND latitude IS NOT NULL AND longitude IS NOT NULL
+       ORDER BY distance
+       LIMIT $4`,
+      [user.latitude, user.longitude, userId, limit]
+    );
+    return result.rows;
+  }
 }
 
 module.exports = User;
-
-// Add location update method
-static async updateLocation(userId, latitude, longitude) {
-  const result = await db.query(
-    `UPDATE users 
-     SET latitude = $1, longitude = $2, location_updated_at = NOW()
-     WHERE id = $3
-     RETURNING id, name, latitude, longitude`,
-    [latitude, longitude, userId]
-  );
-  return result.rows[0];
-}
-
-// Get nearby users
-static async getNearbyUsers(userId, maxDistance = 50, limit = 20) {
-  const user = await this.findById(userId);
-  if (!user || !user.latitude || !user.longitude) {
-    throw new Error('User location not set');
-  }
-  
-  const result = await db.query(
-    `SELECT id, name, email, latitude, longitude,
-            (6371 * acos(cos(radians($1)) * cos(radians(latitude)) * 
-            cos(radians(longitude) - radians($2)) + sin(radians($1)) * 
-            sin(radians(latitude)))) AS distance
-     FROM users
-     WHERE id != $3 AND latitude IS NOT NULL AND longitude IS NOT NULL
-     ORDER BY distance
-     LIMIT $4`,
-    [user.latitude, user.longitude, userId, limit]
-  );
-  return result.rows;
-}
-
-// Update user location
-static async updateLocation(userId, latitude, longitude) {
-  const result = await db.query(
-    `UPDATE users 
-     SET latitude = $1, longitude = $2, location_updated_at = NOW()
-     WHERE id = $3
-     RETURNING id, name, latitude, longitude`,
-    [latitude, longitude, userId]
-  );
-  return result.rows[0];
-}
-
-// Get nearby users
-static async getNearbyUsers(userId, maxDistance = 50, limit = 20) {
-  const user = await this.findById(userId);
-  if (!user || !user.latitude || !user.longitude) {
-    throw new Error('User location not set');
-  }
-  
-  const result = await db.query(
-    `SELECT id, name, email, latitude, longitude,
-            (6371 * acos(cos(radians($1)) * cos(radians(latitude)) * 
-            cos(radians(longitude) - radians($2)) + sin(radians($1)) * 
-            sin(radians(latitude)))) AS distance
-     FROM users
-     WHERE id != $3 AND latitude IS NOT NULL AND longitude IS NOT NULL
-     ORDER BY distance
-     LIMIT $4`,
-    [user.latitude, user.longitude, userId, limit]
-  );
-  return result.rows;
-}
-// Add a static method to find user by ID with pets (for the /me endpoint)
-static async findById(id) {
-  // For in-memory demo, we need to query the users array
-  // Since we're using in-memory storage, we need to import the users array
-  const { users } = require('../routes/auth');
-  const user = users.find(u => u.id === id);
-  if (!user) return null;
-  
-  // Return user without password
-  const { password, ...userWithoutPassword } = user;
-  return userWithoutPassword;
-}
