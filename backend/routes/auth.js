@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const User = require('../models/User');
 
 // In-memory storage (for demo purposes)
 const users = [];
@@ -24,7 +25,11 @@ router.post('/register', async (req, res) => {
       id: nextId++, 
       email, 
       name, 
-      password // In production, hash this!
+      password, // In production, hash this!
+      bio: null,
+      location: null,
+      profile_photo_url: null,
+      created_at: new Date().toISOString()
     };
     users.push(user);
     
@@ -33,7 +38,15 @@ router.post('/register', async (req, res) => {
     
     res.status(201).json({ 
       token, 
-      user: { id: user.id, email: user.email, name: user.name } 
+      user: { 
+        id: user.id, 
+        email: user.email, 
+        name: user.name,
+        bio: user.bio,
+        location: user.location,
+        profile_photo_url: user.profile_photo_url,
+        created_at: user.created_at
+      } 
     });
   } catch (err) {
     console.error('Register error:', err);
@@ -56,7 +69,15 @@ router.post('/login', async (req, res) => {
     
     res.json({ 
       token, 
-      user: { id: user.id, email: user.email, name: user.name } 
+      user: { 
+        id: user.id, 
+        email: user.email, 
+        name: user.name,
+        bio: user.bio,
+        location: user.location,
+        profile_photo_url: user.profile_photo_url,
+        created_at: user.created_at
+      } 
     });
   } catch (err) {
     console.error('Login error:', err);

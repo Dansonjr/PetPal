@@ -110,3 +110,15 @@ static async getNearbyUsers(userId, maxDistance = 50, limit = 20) {
   );
   return result.rows;
 }
+// Add a static method to find user by ID with pets (for the /me endpoint)
+static async findById(id) {
+  // For in-memory demo, we need to query the users array
+  // Since we're using in-memory storage, we need to import the users array
+  const { users } = require('../routes/auth');
+  const user = users.find(u => u.id === id);
+  if (!user) return null;
+  
+  // Return user without password
+  const { password, ...userWithoutPassword } = user;
+  return userWithoutPassword;
+}
