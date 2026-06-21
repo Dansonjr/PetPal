@@ -1,44 +1,65 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/User');
-const bcrypt = require('bcrypt');
 
+// In-memory storage (for demo purposes)
+const users = [];
+let nextId = 1;
+
+// Register
 router.post('/register', async (req, res) => {
   try {
     const { email, password, name } = req.body;
+    
     if (!email || !password || !name) {
-      return res.status(400).json({ error: 'Missing required fields' });
+      return res.status(400).json({ error: 'All fields are required' });
     }
-    const existingUser = await User.findByEmail(email);
-    if (existingUser) {
+    
+    // Check if user exists
+    if (users.find(u => u.email === email)) {
       return res.status(400).json({ error: 'Email already registered' });
     }
-    const user = await User.create({ email, password, name });
-    const token = User.generateToken(user);
-    res.status(201).json({ token, user });
+    
+    // Create user
+    const user = { 
+      id: nextId++, 
+      email, 
+      name, 
+      password // In production, hash this!
+    };
+    users.push(user);
+    
+    // Return fake token (for demo)
+    const token = 'fake-jwt-token-' + user.id;
+    
+    res.status(201).json({ 
+      token, 
+      user: { id: user.id, email: user.email, name: user.name } 
+    });
   } catch (err) {
-    console.error(err);
+    console.error('Register error:', err);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
 
+// Login
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findByEmail(email);
+    
+    const user = users.find(u => u.email === email && u.password === password);
+    
     if (!user) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
-    const valid = await bcrypt.compare(password, user.password_hash);
-    if (!valid) {
-      return res.status(401).json({ error: 'Invalid credentials' });
-    }
-    const token = User.generateToken(user);
-    // Remove password hash from response
-    delete user.password_hash;
-    res.json({ token, user });
+    
+    const token = 'fake-jwt-token-' + user.id;
+    
+    res.json({ 
+      token, 
+      user: { id: user.id, email: user.email, name: user.name } 
+    });
   } catch (err) {
-    console.error(err);
+    console.error('Login error:', err);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
