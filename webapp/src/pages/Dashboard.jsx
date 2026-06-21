@@ -7,6 +7,7 @@ import PetManagement from './profile/PetManagement';
 import Friends from './Friends';
 import Chat from './Chat';
 import PetMatching from './PetMatching';
+import LocationSettings from './LocationSettings';
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
@@ -26,6 +27,7 @@ const Dashboard = () => {
     { id: 'friends', name: '👥 Friends', component: Friends },
     { id: 'chat', name: '💬 Chat', component: Chat },
     { id: 'matches', name: '🐶 Pet Matches', component: PetMatching },
+    { id: 'location', name: '📍 Location', component: LocationSettings },
   ];
 
   const ActiveComponent = tabs.find(t => t.id === activeTab)?.component || ProfileEdit;

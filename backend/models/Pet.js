@@ -60,6 +60,28 @@ class Pet {
     );
     return result.rows;
   }
+
+  // Find nearby pets with distance calculation
+  static async findNearbyWithDistance(userId, userLat, userLon, maxDistance = 50, limit = 20) {
+    const result = await db.query(
+      `SELECT p.*, u.name as owner_name, u.id as owner_id,
+              (6371 * acos(cos(radians($1)) * cos(radians(p.latitude)) * 
+              cos(radians(p.longitude) - radians($2)) + sin(radians($1)) * 
+              sin(radians(p.latitude)))) AS distance
+       FROM pets p
+       JOIN users u ON p.user_id = u.id
+       WHERE u.id != $3 
+         AND p.latitude IS NOT NULL 
+         AND p.longitude IS NOT NULL
+         AND (6371 * acos(cos(radians($1)) * cos(radians(p.latitude)) * 
+              cos(radians(p.longitude) - radians($2)) + sin(radians($1)) * 
+              sin(radians(p.latitude)))) <= $4
+       ORDER BY distance
+       LIMIT $5`,
+      [userLat, userLon, userId, maxDistance, limit]
+    );
+    return result.rows;
+  }
 }
 
 module.exports = Pet;
