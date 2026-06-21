@@ -1,111 +1,83 @@
 const express = require('express');
 const http = require('http');
-const socketIo = require('socket.io');
-const jwt = require('jsonwebtoken');
 const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
 const server = http.createServer(app);
 
-// Configure CORS properly
+// ============================================
+// CORS CONFIGURATION - Allow both local and production
+// ============================================
+const allowedOrigins = [
+  'https://luminous-marzipan-2814af.netlify.app',  // Your live Netlify URL
+  'http://localhost:5173',                         // Local Vite dev server
+  'http://localhost:3000',                         // Alternative local port
+  'http://127.0.0.1:5173',                         // Localhost alias
+  'https://petpal.netlify.app'                     // Your custom Netlify domain (if any)
+];
+
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:3000', 'http://127.0.0.1:5173'],
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.log('Blocked origin:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  exposedHeaders: ['Content-Length', 'X-Requested-With']
 }));
 
-const io = socketIo(server, { 
-  cors: { 
-    origin: "http://localhost:5173",
-    methods: ["GET", "POST"],
-    credentials: true
-  } 
-});
+// Handle preflight requests
+app.options('*', cors());
 
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
+// ============================================
+// API ROUTES
+// ============================================
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/users', require('./routes/users'));
 
+// Friend routes with Socket.io integration
 const friendRoutes = require('./routes/friends');
-friendRoutes.setIo(io);
+// Set io later when available
 app.use('/api/friends', friendRoutes.router);
 
 app.use('/api/pets', require('./routes/pets'));
 app.use('/api/pet-matches', require('./routes/petmatches'));
 app.use('/api/messages', require('./routes/messages'));
 
-app.get('/', (req, res) => res.send('PetPal API running'));
-
-// Socket.io authentication
-io.use((socket, next) => {
-  const token = socket.handshake.auth.token;
-  if (!token) return next(new Error('Authentication error'));
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    socket.userId = decoded.id;
-    next();
-  } catch (err) {
-    next(new Error('Invalid token'));
-  }
+// ============================================
+// HEALTH CHECK ROUTE
+// ============================================
+app.get('/', (req, res) => {
+  res.send('PetPal API running');
 });
 
-const Message = require('./models/Message');
-
-io.on('connection', (socket) => {
-  console.log(`User ${socket.userId} connected`);
-  socket.join(`user_${socket.userId}`);
-
-  socket.on('private message', async ({ receiverId, content }, callback) => {
-    try {
-      const savedMessage = await Message.create({
-        senderId: socket.userId,
-        receiverId: receiverId,
-        content: content
-      });
-      
-      io.to(`user_${receiverId}`).emit('private message', {
-        id: savedMessage.id,
-        senderId: socket.userId,
-        receiverId: receiverId,
-        content: content,
-        is_read: false,
-        created_at: savedMessage.created_at
-      });
-      
-      if (callback) callback({ success: true, messageId: savedMessage.id });
-    } catch (err) {
-      console.error('Error saving message:', err);
-      if (callback) callback({ success: false, error: 'Database error' });
-    }
-  });
-
-  socket.on('typing', ({ receiverId, isTyping }) => {
-    socket.to(`user_${receiverId}`).emit('user typing', {
-      userId: socket.userId,
-      isTyping
-    });
-  });
-
-  socket.on('mark read', async ({ senderId }) => {
-    try {
-      await Message.markAsRead(socket.userId, senderId);
-      io.to(`user_${senderId}`).emit('messages read', {
-        byUserId: socket.userId
-      });
-    } catch (err) {
-      console.error('Error marking messages as read:', err);
-    }
-  });
-
-  socket.on('disconnect', () => {
-    console.log(`User ${socket.userId} disconnected`);
-  });
+// ============================================
+// ERROR HANDLING
+// ============================================
+app.use((err, req, res, next) => {
+  console.error('Error:', err.message);
+  res.status(500).json({ error: 'Something went wrong!' });
 });
 
+// ============================================
+// START SERVER
+// ============================================
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => console.log(`Server on port ${PORT}`));
+server.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`📍 Local: http://localhost:${PORT}`);
+  console.log(`🌐 CORS enabled for: ${allowedOrigins.join(', ')}`);
+});
