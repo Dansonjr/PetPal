@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
 const Pet = require('../models/Pet');
+const User = require('../models/User');
 
 // Add a new pet
 router.post('/', auth, async (req, res) => {
@@ -60,9 +61,20 @@ router.delete('/:id', auth, async (req, res) => {
 // Find nearby pets (for matching)
 router.get('/nearby', auth, async (req, res) => {
   try {
+    const user = await User.findById(req.userId);
+    if (user && user.latitude && user.longitude) {
+      const nearby = await Pet.findNearbyWithDistance(
+        req.userId,
+        user.latitude,
+        user.longitude
+      );
+      return res.json(nearby);
+    }
+
     const nearby = await Pet.findNearby(req.userId);
     res.json(nearby);
   } catch (err) {
+    console.error('Nearby pets error:', err);
     res.status(500).json({ error: 'Internal server error' });
   }
 });

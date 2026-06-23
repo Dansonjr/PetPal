@@ -3,7 +3,7 @@ import api from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
 
 const LocationSettings = () => {
-  const { user } = useAuth();
+  const { user, setUser } = useAuth();
   const [address, setAddress] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
@@ -25,6 +25,14 @@ const LocationSettings = () => {
       
       setMessage(`✅ Location updated: ${formatted}`);
       setAddress('');
+      if (setUser) {
+        setUser(prev => ({
+          ...prev,
+          latitude,
+          longitude,
+          location: formatted
+        }));
+      }
     } catch (err) {
       setMessage('❌ Failed to update location: ' + (err.response?.data?.error || err.message));
     } finally {

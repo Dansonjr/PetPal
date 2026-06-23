@@ -31,21 +31,31 @@ export const AuthProvider = ({ children }) => {
   };
 
   const login = async (email, password) => {
-    const response = await api.post('/auth/login', { email, password });
-    const { token, user } = response.data;
-    localStorage.setItem('token', token);
-    setToken(token);
-    setUser(user);
-    return user;
+    try {
+      const response = await api.post('/auth/login', { email, password });
+      const { token, user } = response.data;
+      localStorage.setItem('token', token);
+      setToken(token);
+      setUser(user);
+      return user;
+    } catch (error) {
+      console.error('Login error:', error.response || error);
+      throw error;
+    }
   };
 
   const register = async (email, password, name) => {
-    const response = await api.post('/auth/register', { email, password, name });
-    const { token, user } = response.data;
-    localStorage.setItem('token', token);
-    setToken(token);
-    setUser(user);
-    return user;
+    try {
+      const response = await api.post('/auth/register', { email, password, name });
+      const { token, user } = response.data;
+      localStorage.setItem('token', token);
+      setToken(token);
+      setUser(user);
+      return user;
+    } catch (error) {
+      console.error('Register error:', error.response || error);
+      throw error;
+    }
   };
 
   const logout = () => {

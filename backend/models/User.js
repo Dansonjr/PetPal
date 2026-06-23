@@ -19,7 +19,7 @@ class User {
 
   static async findById(id) {
     const result = await db.query(
-      `SELECT u.id, u.email, u.name, u.location, u.bio, u.profile_photo_url, u.created_at,
+      `SELECT u.id, u.email, u.name, u.location, u.bio, u.profile_photo_url, u.latitude, u.longitude, u.created_at,
               COALESCE(json_agg(p.*) FILTER (WHERE p.id IS NOT NULL), '[]') as pets
        FROM users u
        LEFT JOIN pets p ON u.id = p.user_id

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
+const db = require('../config/db');
 const User = require('../models/User');
 
 // Get current user profile
