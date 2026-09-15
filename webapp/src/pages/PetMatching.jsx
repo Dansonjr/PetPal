@@ -29,10 +29,14 @@ const PetMatching = () => {
 
   const fetchNearbyPets = async () => {
     try {
-      const response = await api.get('/pets/nearby');
+      const response = await api.get('/location/nearby-pets');
       setNearbyPets(response.data);
     } catch (err) {
       console.error('Failed to fetch nearby pets:', err);
+      if (err.response?.data?.error === 'Your location not set') {
+        setNearbyPets([]);
+        setHasPet(true);
+      }
     } finally {
       setLoading(false);
     }

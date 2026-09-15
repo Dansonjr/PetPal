@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import api from '../../services/api';
 import { getSocket } from '../../services/socket';
+import { useTheme } from '../../contexts/ThemeContext';
 import MessageBubble from './MessageBubble';
 
 const ChatWindow = ({ friend, userId }) => {
@@ -9,7 +10,10 @@ const ChatWindow = ({ friend, userId }) => {
   const [loading, setLoading] = useState(true);
   const [typing, setTyping] = useState(false);
   const [otherUserTyping, setOtherUserTyping] = useState(false);
+  const [sending, setSending] = useState(false);
   const messagesEndRef = useRef(null);
+  const typingTimeoutRef = useRef(null);
+  const { darkMode } = useTheme();
   const socket = getSocket();
 
   useEffect(() => {
@@ -17,7 +21,6 @@ const ChatWindow = ({ friend, userId }) => {
       fetchMessages();
       markAsRead();
       
-      // Join room for this chat
       if (socket) {
         socket.emit('join chat', friend.id);
       }
@@ -58,7 +61,7 @@ const ChatWindow = ({ friend, userId }) => {
   const fetchMessages = async () => {
     try {
       const response = await api.get(`/messages/${friend.id}`);
-      setMessages(response.data.reverse()); // Oldest first
+      setMessages(response.data.reverse());
     } catch (err) {
       console.error('Failed to fetch messages:', err);
     } finally {
@@ -82,17 +85,19 @@ const ChatWindow = ({ friend, userId }) => {
     e.preventDefault();
     if (!newMessage.trim() || !socket) return;
 
+    setSending(true);
     const messageContent = newMessage;
     setNewMessage('');
+    setTyping(false);
 
     socket.emit('private message', {
       receiverId: friend.id,
       content: messageContent
     }, (response) => {
       if (response && response.success) {
-        // Message saved on server, will be received via socket
-        console.log('Message sent', response);
+        console.log('Message sent');
       }
+      setSending(false);
     });
   };
 
@@ -101,62 +106,141 @@ const ChatWindow = ({ friend, userId }) => {
       setTyping(true);
       socket.emit('typing', { receiverId: friend.id, isTyping: true });
     }
-  };
-
-  const handleTypingStop = () => {
-    if (typing && socket) {
+    
+    if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+    typingTimeoutRef.current = setTimeout(() => {
       setTyping(false);
       socket.emit('typing', { receiverId: friend.id, isTyping: false });
-    }
+    }, 2000);
   };
 
   if (!friend) {
+    return null;
+  }
+
+  if (loading) {
     return (
-      <div className="card" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <p style={{ color: '#666' }}>Select a friend to start chatting</p>
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100%'
+      }}>
+        <div className="spinner"></div>
       </div>
     );
   }
 
-  if (loading) return <div className="spinner"></div>;
-
   return (
-    <div className="card" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <div style={{ padding: '15px', borderBottom: '2px solid #e0e0e0', background: '#f9f9f9' }}>
-        <h3 style={{ margin: 0 }}>Chat with {friend.name}</h3>
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      height: '100%'
+    }}>
+      {/* Header */}
+      <div style={{
+        padding: '16px',
+        borderBottom: `1px solid ${darkMode ? '#444' : '#e0e0e0'}`,
+        background: darkMode ? '#2a2a2a' : 'white',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '12px'
+      }}>
+        <div style={{
+          width: '40px',
+          height: '40px',
+          background: '#667eea',
+          borderRadius: '50%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '18px',
+          color: 'white'
+        }}>
+          👤
+        </div>
+        <div>
+          <h3 style={{ margin: 0, color: darkMode ? '#fff' : '#333' }}>{friend.name}</h3>
+          <p style={{ margin: '2px 0 0', fontSize: '12px', color: darkMode ? '#888' : '#999' }}>
+            {friend.email}
+          </p>
+        </div>
       </div>
 
-      <div style={{ flex: 1, overflowY: 'auto', padding: '20px', minHeight: '400px' }}>
+      {/* Messages */}
+      <div style={{
+        flex: 1,
+        overflowY: 'auto',
+        padding: '16px',
+        minHeight: '400px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '8px'
+      }}>
         {messages.length === 0 ? (
-          <p style={{ textAlign: 'center', color: '#666' }}>No messages yet. Say hello!</p>
+          <div style={{
+            textAlign: 'center',
+            color: darkMode ? '#888' : '#999',
+            marginTop: 'auto',
+            marginBottom: 'auto'
+          }}>
+            <div style={{ fontSize: '32px', marginBottom: '8px' }}>👋</div>
+            <p>No messages yet. Say hello!</p>
+          </div>
         ) : (
           messages.map(msg => (
             <MessageBubble
               key={msg.id}
               message={msg}
               isOwn={msg.sender_id === userId}
+              darkMode={darkMode}
             />
           ))
         )}
         {otherUserTyping && (
-          <div style={{ color: '#666', fontSize: '12px', fontStyle: 'italic' }}>
+          <div style={{ color: darkMode ? '#888' : '#999', fontSize: '12px', fontStyle: 'italic', marginTop: '8px' }}>
             {friend.name} is typing...
           </div>
         )}
         <div ref={messagesEndRef} />
       </div>
 
-      <form onSubmit={handleSendMessage} style={{ padding: '15px', borderTop: '2px solid #e0e0e0', display: 'flex', gap: '10px' }}>
+      {/* Input */}
+      <form 
+        onSubmit={handleSendMessage} 
+        style={{
+          padding: '16px',
+          borderTop: `1px solid ${darkMode ? '#444' : '#e0e0e0'}`,
+          background: darkMode ? '#2a2a2a' : 'white',
+          display: 'flex',
+          gap: '10px'
+        }}
+      >
         <input
           type="text"
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           onKeyDown={handleTypingStart}
-          onKeyUp={handleTypingStop}
           placeholder="Type a message..."
-          style={{ flex: 1, padding: '10px', borderRadius: '8px', border: '2px solid #e0e0e0' }}
+          disabled={sending}
+          style={{
+            flex: 1,
+            padding: '10px 12px',
+            borderRadius: '8px',
+            border: `1px solid ${darkMode ? '#444' : '#ddd'}`,
+            fontSize: '14px',
+            background: darkMode ? '#1a1a1a' : '#f5f5f5',
+            color: darkMode ? '#fff' : '#333'
+          }}
         />
-        <button type="submit" className="btn btn-primary">Send</button>
+        <button 
+          type="submit" 
+          className="btn btn-primary"
+          disabled={sending || !newMessage.trim()}
+          style={{ padding: '8px 16px' }}
+        >
+          {sending ? '...' : '📤 Send'}
+        </button>
       </form>
     </div>
   );

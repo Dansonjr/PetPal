@@ -1,6 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const FriendCard = ({ friend }) => {
+  const navigate = useNavigate();
+
   return (
     <div className="pet-card" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
       <div style={{
@@ -22,7 +25,7 @@ const FriendCard = ({ friend }) => {
       <button 
         className="btn btn-primary" 
         style={{ padding: '8px 16px' }}
-        onClick={() => window.location.href = `/chat/${friend.id}`}
+        onClick={() => navigate('/dashboard?tab=chat')}
       >
         💬 Message
       </button>

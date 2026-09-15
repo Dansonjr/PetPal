@@ -4,6 +4,9 @@ CREATE TABLE users (
   password_hash TEXT NOT NULL,
   name VARCHAR(100) NOT NULL,
   location VARCHAR(255),
+  latitude NUMERIC(10, 7),
+  longitude NUMERIC(10, 7),
+  location_updated_at TIMESTAMP,
   bio TEXT,
   profile_photo_url TEXT,
   created_at TIMESTAMP DEFAULT NOW()
@@ -16,7 +19,9 @@ CREATE TABLE pets (
   species VARCHAR(50),
   breed VARCHAR(100),
   age INTEGER,
-  photo_url TEXT
+  photo_url TEXT,
+  latitude NUMERIC(10, 7),
+  longitude NUMERIC(10, 7)
 );
 
 CREATE TABLE friendships (
