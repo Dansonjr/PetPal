@@ -25,7 +25,7 @@ The web app is fully responsive and can be installed as a PWA on mobile devices.
 ### 📊 Project Metrics
 - Backend: Node.js + Express + Socket.io
 - Frontend: React + Vite
-- Tests: 44/44 passing (100%)
+- Tests: manual test plan (see tests/test_plan.md); automated tests planned
 - Documentation: Days 1-13 complete
 
 ### 🔗 Repository
