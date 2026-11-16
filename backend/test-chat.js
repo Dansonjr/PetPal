@@ -1,8 +1,7 @@
 const io = require('socket.io-client');
 
-// REPLACE THESE WITH YOUR ACTUAL TOKENS FROM ABOVE
-const ALICE_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhbGljZUBleGFtcGxlLmNvbSIsImlhdCI6MTc3OTk2MjY2MiwiZXhwIjoxNzgwNTY3NDYyfQ.-nVvj0FKOIyTXSmrZ3AdW7fvGayng6aHluWENMYyFSA';
-const BOB_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJib2JAZXhhbXBsZS5jb20iLCJpYXQiOjE3Nzk5NjI2NjIsImV4cCI6MTc4MDU2NzQ2Mn0.URew1fY8AoK1bm9Y2d7T52uh5iC25qwTnLe4C7Z5Dx0';
+const ALICE_TOKEN = process.env.ALICE_TOKEN;
+const BOB_TOKEN = process.env.BOB_TOKEN;
 
 // Connect as Alice
 const aliceSocket = io('http://localhost:5000', {
